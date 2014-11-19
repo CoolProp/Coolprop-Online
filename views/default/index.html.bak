@@ -1,0 +1,11 @@
+{{extend 'layout.html'}}
+
+<html>
+   <head>
+   </head>
+    <style>
+    </style>
+   <body>
+       {{=form}} <br>
+   </body>
+</html>
