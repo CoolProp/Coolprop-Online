@@ -20,7 +20,7 @@ def check(form):
         form.errors.name1 = "These inputs do not form a valid pair"
         form.errors.name2 = "These inputs do not form a valid pair"
 
-possible_inputs = [('Density (mass)[kg/m^3]', 'Dmass'),
+possible_inputs = [('Density (mass) [kg/m^3]', 'Dmass'),
                    ('Pressure [Pa]', 'P'),
                    ('Temperature [K]', 'T'),
                    ('Enthalpy [J/kg]', 'Hmass'),
@@ -47,6 +47,7 @@ def index():
                     TR("Value #1",INPUT(_type="text",_name="value1",_value = "101325", requires=IS_FLOAT_IN_RANGE())),
                     TR("Input #2",SELECT(*input_long_strings,_name="name2",value="Temperature [K]", requires=IS_IN_SET(input_long_strings))),
                     TR("Value #2",INPUT(_type="text",_name="value2",_value = "298", requires=IS_FLOAT_IN_RANGE())),
+                    TR("Output Units",SELECT('Mass-based', 'Mole-based', _name="unit_system")),
                     TR("",INPUT(_type="submit",_value="SUBMIT"))
                     ))
     if form.process(onvalidation=check).accepted:
@@ -69,12 +70,31 @@ def next():
     # Upstream the input pair will be checked to make sure it is valid, so when it gets here there should not be a problem
     HEOS.update(*CoolProp.CoolProp.generate_update_pair(key1, float(request.vars.value1), key2, float(request.vars.value2)))
 
-    form=TABLE(TR("Temperature [K]",HEOS.T()),
+    entries = [TR("Temperature [K]",HEOS.T()),
                TR("Pressure [Pa]",HEOS.p()),
-               TR("Mass Density [kg/m3]",HEOS.rhomass()),
-               TR("Molar Density [mol/m3]",HEOS.rhomolar()),
-               TR("Molar specific heat [J/mol/K]",HEOS.cpmolar())
-               )
+               TR("Vapor quality [kg/kg]",HEOS.keyed_output(CoolProp.iQ)),
+               TR("Speed of sound [m/s]", HEOS.speed_sound())
+               ]
+    if request.vars.unit_system == 'Mole-based':
+        entries += [
+               TR("Density [mol/m3]",HEOS.rhomolar()),
+               TR("Enthalpy [J/mol]",HEOS.hmass()),
+               TR("Entropy [J/mol/K]",HEOS.smass()),
+               TR("Constant-pressure specific heat [J/mol/K]",HEOS.cpmolar()),
+               TR("Constant-volume specific heat [J/mol/K]",HEOS.cvmolar())
+               ]
+    elif request.vars.unit_system == 'Mass-based':
+        entries += [
+               TR("Density [kg/m3]",HEOS.rhomass()),
+               TR("Enthalpy [J/kg]",HEOS.hmass()),
+               TR("Entropy [J/kg/K]",HEOS.smass()),
+               TR("Constant-pressure specific heat [J/kg/K]",HEOS.cpmass()),
+               TR("Constant-volume specific heat [J/kg/K]",HEOS.cvmass())
+        ]
+    else:
+        raise ValueError
+        
+    form = TABLE(entries)
 
     T = np.linspace(CoolProp.CoolProp.PropsSI(fluid,"Ttriple")+0.1, CoolProp.CoolProp.PropsSI(fluid,"Tcrit")-0.1)
     p = CoolProp.CoolProp.PropsSI("P","T",T,"Q",[0]*len(T),fluid)
