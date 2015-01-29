@@ -78,8 +78,8 @@ def next():
     if request.vars.unit_system == 'Mole-based':
         entries += [
                TR("Density [mol/m3]",HEOS.rhomolar()),
-               TR("Enthalpy [J/mol]",HEOS.hmass()),
-               TR("Entropy [J/mol/K]",HEOS.smass()),
+               TR("Enthalpy [J/mol]",HEOS.hmolar()),
+               TR("Entropy [J/mol/K]",HEOS.smolar()),
                TR("Constant-pressure specific heat [J/mol/K]",HEOS.cpmolar()),
                TR("Constant-volume specific heat [J/mol/K]",HEOS.cvmolar())
                ]
