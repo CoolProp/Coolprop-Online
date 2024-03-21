@@ -72,9 +72,13 @@ def next():
 
     entries = [TR("Temperature [K]",HEOS.T()),
                TR("Pressure [Pa]",HEOS.p()),
-               TR("Vapor quality [kg/kg]",HEOS.keyed_output(CoolProp.iQ)),
-               TR("Speed of sound [m/s]", HEOS.speed_sound())
+               TR("Vapor quality [kg/kg]",HEOS.keyed_output(CoolProp.iQ))
                ]
+    try:
+        entries.append(TR("Speed of sound [m/s]", HEOS.speed_sound()))
+    except:
+        entries.append(TR("Speed of sound [m/s]", "Not valid"))
+        
     if request.vars.unit_system == 'Mole-based':
         entries += [
                TR("Density [mol/m3]",HEOS.rhomolar()),
