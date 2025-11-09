@@ -5,6 +5,10 @@
         <h2>CoolProp Property Calculator</h2>
         <p class="lead">Enter two thermodynamic properties to calculate the state of a fluid.</p>
 
+        [[if error_alert:]]
+        [[=error_alert]]
+        [[pass]]
+
         <div class="card">
             <div class="card-body">
                 [[=form]]
