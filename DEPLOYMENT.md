@@ -48,11 +48,11 @@ pip install CoolProp  # Use latest version instead of 7.2.0
 
 ### 5. Update WSGI Configuration
 
-In the Web tab, click on the WSGI configuration file and replace its contents with:
+In the Web tab, click on the WSGI configuration file and replace its contents with **ONE** of these options:
 
+#### Option 1: Direct import (Recommended)
 ```python
 import sys
-import os
 
 # Add your project to the path
 project_home = '/home/YOUR_USERNAME/Coolprop-Online'
@@ -64,11 +64,33 @@ activate_this = '/home/YOUR_USERNAME/.virtualenvs/coolprop-env/bin/activate_this
 with open(activate_this) as file_:
     exec(file_.read(), dict(__file__=activate_this))
 
-# Import the WSGI application from the coolpropgit app
+# Import the WSGI application
 from apps.coolpropgit.wsgi import application
 ```
 
+#### Option 2: Execute the wsgi.py file directly (if imports fail)
+```python
+import sys
+
+# Add project to path
+project_home = '/home/YOUR_USERNAME/Coolprop-Online'
+if project_home not in sys.path:
+    sys.path.insert(0, project_home)
+
+# Activate virtual environment
+activate_this = '/home/YOUR_USERNAME/.virtualenvs/coolprop-env/bin/activate_this.py'
+with open(activate_this) as file_:
+    exec(file_.read(), dict(__file__=activate_this))
+
+# Execute the wsgi.py file directly
+wsgi_file = '/home/YOUR_USERNAME/Coolprop-Online/apps/coolpropgit/wsgi.py'
+with open(wsgi_file) as f:
+    exec(f.read())
+```
+
 **Replace `YOUR_USERNAME`** with your actual PythonAnywhere username!
+
+If you get import errors, try Option 2 which executes the wsgi.py file directly.
 
 ### 6. Set Virtual Environment
 
