@@ -1,7 +1,7 @@
 """
 Database models for CoolProp application (migrated from web2py to py4web)
 """
-from py4web import DAL, Field
+from py4web import DAL
 from pydal.validators import *
 import os
 

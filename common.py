@@ -3,11 +3,10 @@ Common initialization for CoolProp py4web application
 This replaces web2py's models/db.py and models/menu.py
 """
 import os
-from py4web import action, request, abort, redirect, URL, Field, Session
+from py4web import Session
 from py4web.utils.auth import Auth
 from pydal.validators import *
 from .models import db
-from . import settings
 
 # Create databases folder if it doesn't exist
 os.makedirs(os.path.join(os.path.dirname(__file__), "databases"), exist_ok=True)

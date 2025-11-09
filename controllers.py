@@ -7,18 +7,14 @@ import numpy as np
 import matplotlib
 
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import CoolProp
-import base64
-from io import BytesIO
 
-from py4web import action, request, abort, redirect, URL, Field
-from py4web.core import Fixture, Template
+from py4web import action, request, abort, redirect, URL
 from pydal.validators import *
-from yatl.helpers import XML, A, FORM, TABLE, TR, TD, SELECT, INPUT, SPAN, OPTION
+from yatl.helpers import XML, FORM, TABLE, TR, TD, SELECT, INPUT, OPTION
 
-from .common import db, session, auth, T
+from .common import db, session, auth
 
 # Template path
 template_folder = os.path.join(os.path.dirname(__file__), "templates")
